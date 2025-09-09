@@ -32,8 +32,8 @@ The project uses the **Chest X-Ray dataset** (Kaggle: [Chest X-Ray Images (Pneum
 
 ```bash
 # Clone repo
-git clone https://github.com/yourusername/pneumonia-xray-classification.git
-cd pneumonia-xray-classification
+git clone [https://github.com/yourusername/pneumonia-xray-classification.git](https://github.com/JTuCodeX/Pneumonia-Detection-from-Chest-X-Rays-.git)
+cd Pneumonia-Detection-from-Chest-X-Rays
 
 # Create environment
 python -m venv venv
