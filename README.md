@@ -45,21 +45,82 @@ pip install -r requirements.txt
 
 ## 🚀 Training the Model
 
-- Train with CrossEntropy loss:
+Default behaviour (current code):
+
+Run the main training script:
+
 ```bash
-python model.py --loss CE
+python model.py 
+```
+The script will first train using CrossEntropyLoss and save:
+
+pneumonia_resnet18_CE.pth
+
+It will then switch to FocalLoss and train again, saving:
+
+pneumonia_resnet18_FOCAL.pth
+
+Training progress (loss/accuracy) is printed per epoch and the script will call plot_training(...) to visualize the histories.
+
+If you prefer to run only one loss (optional)
+
+The repository ships with the sequential approach. To train only one loss without editing the core loop, you can:
+
+Temporarily comment out one of the train_model(...) calls at the bottom of model.py,
+
+OR add a small CLI wrapper (example below) to control whether to run CE, FOCAL, or BOTH.
+
+Example: small argparse wrapper to add to the bottom of model.py (optional)
+
+```bash
+if __name__ == "__main__":
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--loss", choices=["CE","FOCAL","BOTH"], default="BOTH")
+    ap.add_argument("--epochs", type=int, default=10)
+    args = ap.parse_args()
+
+    print("Classes:", train_dataset.classes)
+
+    if args.loss in ("CE","BOTH"):
+        criterion = nn.CrossEntropyLoss()
+        history_ce = train_model(num_epochs=args.epochs, loss_method="CE")
+
+    if args.loss in ("FOCAL","BOTH"):
+        criterion = FocalLoss(alpha=1, gamma=2)
+        history_focal = train_model(num_epochs=args.epochs, loss_method="FOCAL")
+
+    # Adjust plotting depending on what's available
+    try:
+        plot_training(history_ce if 'history_ce' in locals() else None,
+                      history_focal if 'history_focal' in locals() else None)
+    except Exception:
+        pass
+
 ```
 
-- Train with Focal loss:
+## 🧪 Evaluation
+
+Evaluate a trained checkpoint using evaluate.py:
+
 ```bash
-python model.py --loss FOCAL
+python evaluate.py --weights pneumonia_resnet18_CE.pth
 ```
 
--Models will be saved as:
+or
 
-- pneumonia_resnet18_CE.pth
+```bash
+python evaluate.py --weights pneumonia_resnet18_FOCAL.pth
+```
 
-- pneumonia_resnet18_FOCAL.pth
+evaluate.py will compute and print:
+
+Accuracy, Precision, Recall (Sensitivity), F1 Score, Specificity
+
+ROC-AUC, PR-AUC
+
+Confusion matrix and a per-class classification report
+
 
 
 ## 📜 License
