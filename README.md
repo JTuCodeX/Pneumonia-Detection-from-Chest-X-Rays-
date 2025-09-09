@@ -1,0 +1,2 @@
+# Pneumonia Detection from Chest X-Rays 
+A deep learning project for classifying chest X-ray images as NORMAL or PNEUMONIA using transfer learning with ResNet18 in PyTorch. The pipeline covers dataset preprocessing (resize, normalize, augmentation), model training with CrossEntropy and Focal Loss, evaluation with comprehensive metrics (accuracy, precision, recall, F1, specificity, ROC-AUC, PR-AUC), and visualizations including confusion matrix, ROC and PR curves. Includes full documentation for reproducibility and learning.
